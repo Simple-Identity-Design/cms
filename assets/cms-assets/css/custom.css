@@ -1,0 +1,10 @@
+body.dark .user-profile .widget-content-area .user-info-list ul.contacts-block {
+  max-width: 100% !important;
+}
+.badge-category {
+  padding: 0.35em 0.6em;
+  border-radius: 0.35em;
+  font-size: 0.85em;
+  display: inline-block;
+  color: #fff; /* good contrast for dark backgrounds */
+}

@@ -1,0 +1,140 @@
+header .navbar-brand img {
+  max-height: 80px;
+}
+header.sticky .navbar-brand {
+  padding: 5px 0;
+}
+.navbar .navbar-nav .nav-link {
+  color: var(--dark-gray) !important ;
+}
+.transparent-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(210, 210, 210, 0.3);
+  /* 70% transparency */
+  z-index: 2;
+  /* Ensure it covers background but is behind the logo and content */
+}
+/* Header Logo height */
+.bg-hg {
+  background-color: #d2d2d2;
+}
+/*buttons */
+.btn.btn-hg-green {
+  background-color: #0d7c35;
+  color: #fff;
+}
+.btn.btn-hg-green:hover,
+.btn.btn-hg-green:active {
+  background-color: #fff;
+  border-color: #0d7c35;
+  color: #0d7c35;
+}
+.btn.btn-hg-red {
+  background-color: #f11c15;
+  color: #fff;
+}
+.btn.btn-hg-red:hover,
+.btn.btn-hg-red:active {
+  background-color: white;
+  border-color: #f11c15;
+  color: #f11c15;
+}
+/* end buttons */
+/* footer font sizes */
+.fs-1 {
+  font-size: 1rem !important;
+  line-height: 1rem !important;
+}
+/* end footer font sizes */
+/*sub nav underline*/
+.categories-style-01:hover a:last-child:after {
+  display: none !important;
+}
+/*end sub nav underline*/
+.bg-hg-tan {
+  bg-hgbackground-color: #f0eeea;
+}
+/* Start Base color */
+:root {
+  --base-color: #ba9f58;
+  --secondary-color: #3b3e41;
+  --dark-gray: #181a19;
+  --medium-gray: #797471;
+}
+/* end Base color */
+/* start  badge color */
+.shop-image .lable.sale {
+  background-color: #132452;
+}
+#alert-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: auto;
+}
+/* end badge color */
+.navbar-toggler-line {
+  background: var(--base-color);
+}
+.header-light .menu-item-list .nav-link {
+  color: var(--base-color);
+}
+span.form-icon {
+  z-index: 0;
+}
+.menu-item-list .menu-item .menu-toggle {
+  right: 20px;
+  top: 32px;
+}
+.header-light .menu-item-list .menu-item .menu-toggle:before,
+.header-light .menu-item-list .menu-item .menu-toggle:after {
+  background-color: var(--base-color);
+}
+/* Big FREELANCER text styles */
+.fs-335 {
+  font-size: 20.938rem;
+  line-height: 18.75rem;
+}
+.text-shadow-large {
+  text-shadow: 0 20px 60px rgb(0, 0, 0, 0.15);
+}
+/* Responsive adjustments for .fs-335 */
+@media only screen and (max-width: 1600px) {
+  .fs-335 {
+    font-size: 15.625rem;
+    line-height: 15.625rem;
+  }
+}
+@media only screen and (max-width: 1399px) {
+  .fs-335 {
+    font-size: 12.5rem;
+    line-height: 12.5rem;
+  }
+}
+@media only screen and (max-width: 1199px) {
+  .fs-335 {
+    font-size: 10.625rem;
+    line-height: 10.625rem;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .fs-335 {
+    font-size: 6.25rem;
+    line-height: 6.25rem;
+  }
+}
+.menu-item-list .menu-item {
+  border-bottom: 1px solid #fff !important;
+}
+.hamburger-menu-simple .menu-item-list .nav-link {
+  font-size: 2rem;
+}
+.custom-art-cta:hover {
+  color: var(--dark-gray);
+  text-decoration: underline;
+}

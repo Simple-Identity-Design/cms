@@ -1,0 +1,22 @@
+# IDE + OS junk
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+# Git itself
+.git/
+# Cache
+/application/cache/
+/application/logs/
+# Placeholder files (common in CI to prevent directory listing)
+**/index.html
+# CI3 config files that are env-specific
+/application/config/database.php
+/application/config/config.php
+/application/libraries/Contactmailer.php
+# Composer or Node stuff (add if used later)
+vendor/
+node_modules/
+# Uploads or user files (if applicable later)
+uploads/
+assets/uploads/
