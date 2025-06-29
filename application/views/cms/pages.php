@@ -4,7 +4,6 @@
 <head>
     <?php $this->load->view('/global/cms/meta.php'); ?>
     <title>Knowledge Base | CORK - Multipurpose Bootstrap Dashboard Template </title>
-    <?php $this->load->view('/global/cms/styles.php'); ?>
     <!-- BEGIN PLUGINS/CUSTOM STYLES FOR BOTH THEMES -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css" />
@@ -25,8 +24,18 @@
     <!-- ScrollspyNav & Flatpickr (DARK) -->
     <link href="/assets/cms-assets/src/assets/css/dark/scrollspyNav.css" rel="stylesheet" type="text/css" />
     <link href="/assets/cms-assets/src/plugins/css/dark/flatpickr/custom-flatpickr.css" rel="stylesheet" type="text/css">
+    <?php $this->load->view('/global/cms/styles.php'); ?>
     <!-- END PLUGINS/CUSTOM STYLES -->
     <script src="https://cdn.tiny.cloud/1/3at6u02txgs4tmfghlfvznxexlw9o782zs3uy6qdpniueay0/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        .tox-dialog textarea,
+        .tox-textarea {
+            pointer-events: auto !important;
+            opacity: 1 !important;
+            background: #fff !important;
+            color: #222 !important;
+        }
+    </style>
 </head>
 
 <body class=" layout-boxed">
@@ -86,14 +95,14 @@
                                             <th>Updated At</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="edit-table">
                                         <?php foreach ($pages as &$page) : ?>
                                             <tr>
                                                 <td>
                                                     <input class="form-check-input row-check" type="checkbox" name="page_ids[]" value="<?= $page['id']; ?>">
                                                 </td>
                                                 <td class="text-center">
-                                                    <div class="dropdown">
+                                                    <div class="dropdown position-relative">
                                                         <a class="dropdown-toggle" href="#" data-bs-toggle="dropdown" role="button" id="dropdownMenuLink<?= $page['id']; ?>"
                                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -106,15 +115,18 @@
                                                         </a>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink<?= $page['id']; ?>">
                                                             <a class="dropdown-item" href="/<?= htmlspecialchars($page['path']); ?>">View</a>
-                                                            <a class="dropdown-item edit-page" href="javascript:void(0);" data-id="<?= $page['id']; ?>">Edit</a>
-                                                            <!-- Inside each table row, actions column -->
+                                                            <a class="dropdown-item edit-page" href="javascript:void(0);" data-id="<?= $page['id']; ?>">Quick Edit</a>
+                                                            <a class="dropdown-item" href="/pages/edit/<?= $page['id']; ?>" target="_blank">Edit Content</a>
                                                             <a href="javascript:void(0);"
                                                                 class="dropdown-item toggle-status"
                                                                 data-id="<?= $page['id']; ?>"
                                                                 data-status="<?= $page['status'] === 'published' ? 'draft' : 'published'; ?>">
                                                                 <?= $page['status'] === 'published' ? 'Unpublish' : 'Publish'; ?>
                                                             </a>
-                                                            <a class="dropdown-item text-danger delete-page" href="javascript:void(0);" data-id="<?= $page['id']; ?>" data-title="<?= htmlspecialchars($page['title']); ?>">Delete</a>
+                                                            <a class="dropdown-item text-danger delete-page"
+                                                                href="javascript:void(0);"
+                                                                data-id="<?= $page['id']; ?>"
+                                                                data-title="<?= htmlspecialchars($page['title']); ?>">Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -197,57 +209,6 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-                                <!-- Registration Modal -->
-                                <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="addPageLabel" aria-hidden="true" id="addPage">
-                                    <div class="modal-dialog modal-xl" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="addPageLabel">Extra Large</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form id="pageForm" method="post">
-                                                    <input type="text" name="title" id="pageTitle" placeholder="Title" class="form-control mb-3" required>
-                                                    <!-- Renamed path to 'parent_path' -->
-                                                    <input type="text" name="parent_path" id="pageParent" placeholder="Parent path (e.g. services/web)" class="form-control mb-3">
-                                                    <!-- Optional slug -->
-                                                    <input type="text" name="slug" id="pageSlug" placeholder="Page slug (e.g. web-design)" class="form-control mb-3">
-                                                    <input type="text" name="h1" id="pageH1" placeholder="Main Heading (H1)" class="form-control mb-3">
-                                                    <textarea name="meta_description" id="metaDescription" placeholder="Meta Description" class="form-control mb-3"></textarea>
-                                                    <select name="template" id="pageTemplate" class="form-control mb-3">
-                                                        <option value="default">Default</option>
-                                                        <option value="landing">Landing</option>
-                                                        <option value="service">Service</option>
-                                                    </select>
-                                                    <div class="mb-3">
-                                                        <label for="categorySelect" class="form-label">Category</label>
-                                                        <select name="category_id" id="categorySelect" class="form-control">
-                                                            <option value="">Select Category</option>
-                                                            <?php foreach ($categories as $cat): ?>
-                                                                <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
-                                                            <?php endforeach; ?>
-                                                            <option value="add_new">Add New...</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3" id="newCategoryDiv" style="display:none;">
-                                                        <input type="text" id="newCategoryInput" name="new_category" class="form-control" placeholder="Enter new category" />
-                                                    </div>
-                                                    <select name="status" id="pageStatus" class="form-control mb-3">
-                                                        <option value="draft">Draft</option>
-                                                        <option value="published">Published</option>
-                                                    </select>
-                                                    <input type="text" name="tags" id="pageTags" placeholder="Tags (comma-separated)" class="form-control mb-3">
-                                                    <textarea id="modalBodyEditor" name="body" class="form-control mb-3"></textarea>
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-light-dark" data-bs-dismiss="modal"> Discard</button>
-                                                <button type="button" class="btn btn-primary" id="savePageBtn">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <!-- Edit Page Modal -->
                                 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="editPageLabel" aria-hidden="true" id="editPage">
                                     <div class="modal-dialog modal-xl" role="document">
@@ -257,18 +218,41 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form id="editPageForm" method="post">
+                                                <form id="editPageForm" method="post" enctype="multipart/form-data">
                                                     <input type="hidden" name="id" id="editPageId">
-                                                    <input type="text" name="title" id="editPageTitle" placeholder="Title" class="form-control mb-3" required>
-                                                    <input type="text" name="parent_path" id="editPageParent" placeholder="Parent path" class="form-control mb-3">
-                                                    <input type="text" name="slug" id="editPageSlug" placeholder="Page slug" class="form-control mb-3">
-                                                    <input type="text" name="h1" id="editPageH1" placeholder="Main Heading (H1)" class="form-control mb-3">
-                                                    <textarea name="meta_description" id="editMetaDescription" placeholder="Meta Description" class="form-control mb-3"></textarea>
-                                                    <select name="template" id="editPageTemplate" class="form-control mb-3">
-                                                        <option value="default">Default</option>
-                                                        <option value="landing">Landing</option>
-                                                        <option value="service">Service</option>
-                                                    </select>
+                                                    <div class="mb-3">
+                                                        <label for="editFeaturedImage" class="form-label">Featured Image</label>
+                                                        <input type="file" id="editFeaturedImage" name="featured_image" class="form-control">
+                                                    </div>
+                                                    <input type="hidden" id="featuredImagePath" name="featured_image_path">
+                                                    <div class="mb-3">
+                                                        <label for="editPageTitle" class="form-label">Title</label>
+                                                        <input type="text" name="title" id="editPageTitle" class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editPageParent" class="form-label">Parent Path</label>
+                                                        <input type="text" name="parent_path" id="editPageParent" class="form-control">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editPageSlug" class="form-label">Page Slug</label>
+                                                        <input type="text" name="slug" id="editPageSlug" class="form-control">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editPageH1" class="form-label">Main Heading (H1)</label>
+                                                        <input type="text" name="h1" id="editPageH1" class="form-control">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editMetaDescription" class="form-label">Meta Description</label>
+                                                        <textarea name="meta_description" id="editMetaDescription" class="form-control"></textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editPageTemplate" class="form-label">Template</label>
+                                                        <select name="template" id="editPageTemplate" class="form-control">
+                                                            <option value="default">Default</option>
+                                                            <option value="landing">Landing</option>
+                                                            <option value="service">Service</option>
+                                                        </select>
+                                                    </div>
                                                     <div class="mb-3">
                                                         <label for="editCategorySelect" class="form-label">Category</label>
                                                         <select name="category_id" id="editCategorySelect" class="form-control">
@@ -280,19 +264,25 @@
                                                         </select>
                                                     </div>
                                                     <div class="mb-3" id="editNewCategoryDiv" style="display:none;">
+                                                        <label for="editNewCategoryInput" class="form-label">New Category</label>
                                                         <input type="text" id="editNewCategoryInput" name="new_category" class="form-control" placeholder="Enter new category" />
                                                     </div>
-                                                    <select name="status" id="editPageStatus" class="form-control mb-3">
-                                                        <option value="draft">Draft</option>
-                                                        <option value="published">Published</option>
-                                                    </select>
-                                                    <input type="text" name="tags" id="editPageTags" placeholder="Tags (comma-separated)" class="form-control mb-3">
-                                                    <textarea id="editModalBodyEditor" name="body" class="form-control mb-3"></textarea>
+                                                    <div class="mb-3">
+                                                        <label for="editPageStatus" class="form-label">Status</label>
+                                                        <select name="status" id="editPageStatus" class="form-control">
+                                                            <option value="draft">Draft</option>
+                                                            <option value="published">Published</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editPageTags" class="form-label">Tags</label>
+                                                        <input type="text" name="tags" id="editPageTags" class="form-control" placeholder="Tags (comma-separated)">
+                                                    </div>
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
                                                 <button class="btn btn-light-dark" data-bs-dismiss="modal">Discard</button>
-                                                <button type="button" class="btn btn-primary" id="updatePageBtn">Save Changes</button>
+                                                <button type="button" id="updatePageBtn" class="btn btn-primary">Save Changes</button>
                                             </div>
                                         </div>
                                     </div>
@@ -317,10 +307,72 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
     <script>
+        let featuredImageFile = null;
+        // --- Reusable TinyMCE setup function ---
+        function initTinyMCE(selector, content = '') {
+            if (tinymce.get(selector.replace('#', ''))) {
+                tinymce.get(selector.replace('#', '')).remove();
+            }
+            tinymce.init({
+                selector: selector,
+                relative_urls: false,
+                remove_script_host: false,
+                convert_urls: true,
+                height: 400,
+                plugins: 'media image link code', // keep 'code' here
+                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | media image link | code', // 'code' at the end
+                media_live_embeds: true,
+                file_picker_types: 'media image',
+                file_picker_callback: function(cb, value, meta) {
+                    if (meta.filetype === 'image') {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = function() {
+                            const file = this.files[0];
+                            const slug = $('#editPageSlug').val() || $('#pageSlug').val() || 'generic-page';
+                            const randomSuffix = Math.floor(Math.random() * 100000);
+                            const filename = `${slug}-body-${randomSuffix}.${file.name.split('.').pop()}`;
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            formData.append('filename', filename);
+                            formData.append('slug', slug);
+                            fetch('/media/upload_image', {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                .then(res => res.json())
+                                .then(json => cb(json.location)).catch(() => alert('Image upload failed.'));
+                        };
+                        input.click();
+                    }
+                },
+                images_upload_handler: function(blobInfo, success, failure) {
+                    const slug = $('#editPageSlug').val() || $('#pageSlug').val() || 'generic-page';
+                    const randomSuffix = Math.floor(Math.random() * 100000);
+                    const filename = `${slug}-body-${randomSuffix}.${blobInfo.filename().split('.').pop()}`;
+                    const formData = new FormData();
+                    formData.append('file', blobInfo.blob());
+                    formData.append('filename', filename);
+                    formData.append('slug', slug);
+                    fetch('/media/upload_image', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(res => res.json())
+                        .then(json => success(json.location))
+                        .catch(() => failure('Image upload failed'));
+                },
+                setup: function(editor) {
+                    editor.on('init', function() {
+                        editor.setContent(content || '');
+                    });
+                }
+            });
+        }
         $(document).ready(function() {
             // 1. Add search inputs to tfoot (except for checkboxes & actions)
             $('#pages-table tfoot th').each(function(i) {
-                // Only add search boxes to searchable columns (not checkbox or actions)
                 if ([0, 1].includes(i)) {
                     $(this).html('');
                 } else {
@@ -337,7 +389,7 @@
                         text: "Add New",
                         className: "btn btn-primary mb-2 me-2",
                         action: function() {
-                            $('#addPage').modal('show');
+                            window.location.href = '/pages/create';
                         }
                     },
                     {
@@ -428,31 +480,16 @@
                     }
                 });
             });
-            // 6. TinyMCE modal logic (auto-init and persist content if needed)
+            // 6. TinyMCE modal logic (init on open, destroy on close)
             $('#addPage').on('shown.bs.modal', function() {
-                // Destroy previous editor if it exists (avoid duplication)
-                if (tinymce.get('modalBodyEditor')) {
-                    tinymce.get('modalBodyEditor').remove();
-                }
-                tinymce.init({
-                    selector: '#modalBodyEditor', // Set this ID on your <textarea>
-                    height: 400,
-                    menubar: false,
-                    plugins: [
-                        'advlist autolink lists link image charmap preview anchor',
-                        'searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table code help wordcount'
-                    ],
-                    toolbar: 'undo redo | formatselect | bold italic backcolor | \
-                    alignleft aligncenter alignright alignjustify | \
-                    bullist numlist outdent indent | removeformat | help '
-                });
+                initTinyMCE('#modalBodyEditor');
             });
             $('#addPage').on('hidden.bs.modal', function() {
                 if (tinymce.get('modalBodyEditor')) {
                     tinymce.get('modalBodyEditor').remove();
                 }
             });
+            // --- Bulk delete remains the same ---
             $(document).on("click", "#bulkDeleteBtn", function() {
                 const selected = $(".row-check:checked");
                 if (selected.length === 0) {
@@ -501,15 +538,13 @@
                     }
                 });
             });
+            // Save new page (Add)
             $(document).on('click', '#savePageBtn', function(e) {
                 e.preventDefault();
-                // 1. Ensure TinyMCE content is synced
                 if (tinymce.get('modalBodyEditor')) {
-                    tinymce.get('modalBodyEditor').save(); // copies content to textarea
+                    tinymce.get('modalBodyEditor').save();
                 }
-                // 2. Gather form data
                 var formData = $('#pageForm').serialize();
-                // 3. Submit via AJAX (update URL to match your endpoint)
                 $.ajax({
                     url: '/pages/save',
                     method: 'POST',
@@ -521,6 +556,177 @@
                             $('#addPage').modal('hide');
                             location.reload();
                         } else {
+                            Swal.fire('Error', response.message || 'Unexpected failure.', 'error');
+                        }
+                    },
+                    error: function(xhr) {
+                        let message = 'Something went wrong. Please try again.';
+                        let rawText = xhr.responseText;
+                        try {
+                            const json = JSON.parse(rawText);
+                            if (json.message) message = json.message;
+                        } catch (e) {
+                            const div = document.createElement('div');
+                            div.innerHTML = rawText;
+                            const text = div.textContent || div.innerText || '';
+                            if (/Duplicate entry.*for key 'slug'/i.test(text)) {
+                                message = 'A page with that slug already exists.';
+                            } else if (/Duplicate entry.*for key/i.test(text)) {
+                                message = 'That value must be unique. Please choose a different one.';
+                            } else if (/Field '(.+)' doesn't have a default value/i.test(text)) {
+                                const field = text.match(/Field '(.+)'/i)[1];
+                                message = `Missing required field: ${field}.`;
+                            } else if (/Error Number: \d+/i.test(text)) {
+                                message = 'Something went wrong saving the page. Please check your inputs.';
+                            }
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops!',
+                            text: message
+                        });
+                    }
+                });
+            });
+            // --- Tag/Badge coloring and select logic remains unchanged ---
+            const tagBadgeColors = [
+                '#2196f3', '#4caf50', '#ff9800', '#9c27b0', '#f44336', '#00bcd4', '#e91e63',
+                '#009688', '#ffeb3b', '#795548', '#673ab7', '#8bc34a', '#03a9f4', '#cddc39',
+                '#607d8b', '#ff5722', '#607d8b', '#a1887f', '#ffd600', '#c51162', '#388e3c'
+            ];
+
+            function getTagColor(tag) {
+                let hash = 0;
+                for (let i = 0; i < tag.length; i++) {
+                    hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                return tagBadgeColors[Math.abs(hash) % tagBadgeColors.length];
+            }
+            document.querySelectorAll('.badge-tag').forEach(function(el) {
+                const tag = el.getAttribute('data-tag') || '';
+                el.style.backgroundColor = getTagColor(tag);
+                el.style.color = '#fff';
+            });
+            const badgeColors = [
+                '#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#20c997', '#343a40', '#ff9800',
+                '#e91e63', '#009688', '#ba68c8', '#795548', '#00bcd4', '#fd7e14', '#17a2b8', '#8bc34a',
+                '#607d8b', '#f44336', '#4caf50', '#cddc39', '#3f51b5', '#ffeb3b', '#9c27b0', '#00e676',
+                '#00acc1', '#f06292', '#ab47bc', '#ff7043', '#ffa000', '#8d6e63', '#a1887f', '#e57373',
+                '#81d4fa', '#b2ff59', '#d4e157', '#c2185b', '#7986cb', '#aed581', '#ffb300', '#c62828',
+                '#ad1457', '#e1bee7', '#fbc02d', '#ffccbc', '#d7ccc8', '#b2dfdb', '#b388ff', '#ff8a65',
+                '#388e3c', '#1de9b6'
+            ];
+            document.querySelectorAll('.badge-category').forEach(function(el) {
+                const id = parseInt(el.getAttribute('data-category-id'), 10) || 0;
+                const color = badgeColors[id % badgeColors.length];
+                el.style.backgroundColor = color;
+                el.style.color = '#fff';
+            });
+            $('#categorySelect').on('change', function() {
+                if ($(this).val() === 'add_new') {
+                    $('#newCategoryDiv').show();
+                    $('#newCategoryInput').prop('required', true);
+                } else {
+                    $('#newCategoryDiv').hide();
+                    $('#newCategoryInput').prop('required', false).val('');
+                }
+            });
+            // --- Edit Modal Logic (AJAX load + TinyMCE) ---
+            $(document).on('click', '.edit-page', function() {
+                var pageId = $(this).data('id');
+                $.get('/pages/get/' + pageId, function(response) {
+                    if (response && response.status === 'success') {
+                        var d = response.data;
+                        $('#editPageId').val(d.id);
+                        $('#editPageTitle').val(d.title);
+                        const parentPath = d.path?.split('/').slice(0, -1).join('/') || '';
+                        $('#editPageParent').val(parentPath);
+                        $('#editPageSlug').val(d.slug || '');
+                        $('#editPageH1').val(d.h1 || '');
+                        $('#editMetaDescription').val(d.meta_description || '');
+                        $('#editPageTemplate').val(d.template || 'default');
+                        $('#editCategorySelect').val(d.category_id || '');
+                        $('#editPageStatus').val(d.status || 'draft');
+                        $('#editPageTags').val(d.tags || '');
+                        // Category logic
+                        if (d.category_id === null && d.category_name) {
+                            $('#editCategorySelect').val('add_new');
+                            $('#editNewCategoryDiv').show();
+                            $('#editNewCategoryInput').val(d.category_name);
+                        } else {
+                            $('#editNewCategoryDiv').hide();
+                            $('#editNewCategoryInput').val('');
+                        }
+                        // --- Unified TinyMCE usage for edit modal
+                        initTinyMCE('#editModalBodyEditor', d.body || '');
+                        $('#editPage').modal('show');
+                    } else {
+                        Swal.fire('Error', 'Could not load page for editing.', 'error');
+                    }
+                });
+            });
+            // Handle add new category in edit modal
+            $('#editCategorySelect').on('change', function() {
+                if ($(this).val() === 'add_new') {
+                    $('#editNewCategoryDiv').show();
+                    $('#editNewCategoryInput').prop('required', true);
+                } else {
+                    $('#editNewCategoryDiv').hide();
+                    $('#editNewCategoryInput').prop('required', false).val('');
+                }
+            });
+            // Save changes (Edit)
+            $(document).on('click', '#updatePageBtn', function(e) {
+                e.preventDefault();
+                if (tinymce.get('editModalBodyEditor')) {
+                    tinymce.get('editModalBodyEditor').save();
+                }
+                const form = $('#editPageForm')[0];
+                const formData = new FormData(form);
+                const slug = $('#editPageSlug').val();
+                if (featuredImageFile) {
+                    formData.append('featured_image', featuredImageFile);
+                    formData.append('slug', slug);
+                }
+                const pageId = $('#editPageId').val();
+                $.ajax({
+                    url: '/pages/update/' + pageId,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire('Success', response.message, 'success');
+                            $('#editPage').modal('hide');
+                            location.reload();
+                        } else {
+                            Swal.fire('Error', response.message || 'Unexpected failure.', 'error');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('XHR error', xhr.responseText);
+                    }
+                });
+            });
+            // Status toggle remains unchanged
+            $(document).on('click', '.toggle-status', function() {
+                var pageId = $(this).data('id');
+                var newStatus = $(this).data('status');
+                $.ajax({
+                    url: '/pages/toggle_status',
+                    method: 'POST',
+                    data: {
+                        id: pageId,
+                        status: newStatus
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire('Success', response.message, 'success');
+                            location.reload();
+                        } else {
                             Swal.fire('Error', response.message, 'error');
                         }
                     },
@@ -529,190 +735,16 @@
                     }
                 });
             });
-        });
-        const tagBadgeColors = [
-            '#2196f3', '#4caf50', '#ff9800', '#9c27b0', '#f44336', '#00bcd4', '#e91e63',
-            '#009688', '#ffeb3b', '#795548', '#673ab7', '#8bc34a', '#03a9f4', '#cddc39',
-            '#607d8b', '#ff5722', '#607d8b', '#a1887f', '#ffd600', '#c51162', '#388e3c'
-        ];
-        // Simple hash function for consistency based on tag name
-        function getTagColor(tag) {
-            let hash = 0;
-            for (let i = 0; i < tag.length; i++) {
-                hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            return tagBadgeColors[Math.abs(hash) % tagBadgeColors.length];
-        }
-        document.querySelectorAll('.badge-tag').forEach(function(el) {
-            const tag = el.getAttribute('data-tag') || '';
-            el.style.backgroundColor = getTagColor(tag);
-            el.style.color = '#fff';
-        });
-        const badgeColors = [
-            '#007bff', // Blue
-            '#28a745', // Green
-            '#ffc107', // Yellow
-            '#dc3545', // Red
-            '#6f42c1', // Purple
-            '#20c997', // Teal
-            '#343a40', // Dark
-            '#ff9800', // Orange
-            '#e91e63', // Pink
-            '#009688', // Teal
-            '#ba68c8', // Light Purple
-            '#795548', // Brown
-            '#00bcd4', // Cyan
-            '#fd7e14', // Deep Orange
-            '#17a2b8', // Blue-Green
-            '#8bc34a', // Light Green
-            '#607d8b', // Blue Gray
-            '#f44336', // Vivid Red
-            '#4caf50', // Green
-            '#cddc39', // Lime
-            '#3f51b5', // Indigo
-            '#ffeb3b', // Light Yellow
-            '#9c27b0', // Violet
-            '#00e676', // Emerald
-            '#00acc1', // Sky Blue
-            '#f06292', // Light Pink
-            '#ab47bc', // Lavender
-            '#ff7043', // Coral
-            '#ffa000', // Gold
-            '#8d6e63', // Taupe
-            '#a1887f', // Sand
-            '#e57373', // Salmon
-            '#81d4fa', // Pale Blue
-            '#b2ff59', // Neon Green
-            '#d4e157', // Chartreuse
-            '#c2185b', // Deep Pink
-            '#7986cb', // Light Indigo
-            '#aed581', // Soft Green
-            '#ffb300', // Amber
-            '#c62828', // Fire Red
-            '#ad1457', // Dark Pink
-            '#e1bee7', // Lavender Blush
-            '#fbc02d', // Saffron
-            '#ffccbc', // Peach
-            '#d7ccc8', // Clay
-            '#b2dfdb', // Aqua
-            '#b388ff', // Light Violet
-            '#ff8a65', // Peachy Orange
-            '#388e3c', // Deep Green
-            '#1de9b6', // Mint
-        ];
-        document.querySelectorAll('.badge-category').forEach(function(el) {
-            const id = parseInt(el.getAttribute('data-category-id'), 10) || 0;
-            const color = badgeColors[id % badgeColors.length];
-            el.style.backgroundColor = color;
-            el.style.color = '#fff'; // always white text
-        });
-        $('#categorySelect').on('change', function() {
-            if ($(this).val() === 'add_new') {
-                $('#newCategoryDiv').show();
-                $('#newCategoryInput').prop('required', true);
-            } else {
-                $('#newCategoryDiv').hide();
-                $('#newCategoryInput').prop('required', false).val('');
-            }
-        });
-        $(document).on('click', '.edit-page', function() {
-            var pageId = $(this).data('id');
-            $.get('/pages/get/' + pageId, function(response) {
-                if (response && response.status === 'success') {
-                    var d = response.data;
-                    $('#editPageId').val(d.id);
-                    $('#editPageTitle').val(d.title);
-                    $('#editPageParent').val(d.parent_path || '');
-                    $('#editPageSlug').val(d.slug || '');
-                    $('#editPageH1').val(d.h1 || '');
-                    $('#editMetaDescription').val(d.meta_description || '');
-                    $('#editPageTemplate').val(d.template || 'default');
-                    $('#editCategorySelect').val(d.category_id || '');
-                    $('#editPageStatus').val(d.status || 'draft');
-                    $('#editPageTags').val(d.tags || '');
-                    // Handle category add new
-                    if (d.category_id === null && d.category_name) {
-                        $('#editCategorySelect').val('add_new');
-                        $('#editNewCategoryDiv').show();
-                        $('#editNewCategoryInput').val(d.category_name);
-                    } else {
-                        $('#editNewCategoryDiv').hide();
-                        $('#editNewCategoryInput').val('');
-                    }
-                    // TinyMCE for edit body
-                    if (tinymce.get('editModalBodyEditor')) tinymce.get('editModalBodyEditor').setContent(d.body || '');
-                    else tinymce.init({
-                        selector: '#editModalBodyEditor',
-                        setup: function(editor) {
-                            editor.on('init', function() {
-                                editor.setContent(d.body || '');
-                            });
-                        }
-                    });
-                    $('#editPage').modal('show');
-                } else {
-                    Swal.fire('Error', 'Could not load page for editing.', 'error');
-                }
+            // Store featured image file
+            $('#editFeaturedImage').on('change', function() {
+                featuredImageFile = this.files[0] || null;
             });
         });
-        // Handle add new category in edit modal
-        $('#editCategorySelect').on('change', function() {
-            if ($(this).val() === 'add_new') {
-                $('#editNewCategoryDiv').show();
-                $('#editNewCategoryInput').prop('required', true);
-            } else {
-                $('#editNewCategoryDiv').hide();
-                $('#editNewCategoryInput').prop('required', false).val('');
+        document.addEventListener('focusin', function(e) {
+            // When TinyMCE's code modal opens, focus the textarea
+            if (e.target.classList.contains('tox-textarea')) {
+                setTimeout(() => e.target.focus(), 10);
             }
-        });
-        // Save changes (Edit)
-        $('#updatePageBtn').on('click', function(e) {
-            e.preventDefault();
-            if (tinymce.get('editModalBodyEditor')) tinymce.get('editModalBodyEditor').save();
-            var formData = $('#editPageForm').serialize();
-            var pageId = $('#editPageId').val();
-            $.ajax({
-                url: '/pages/update/' + pageId,
-                method: 'POST',
-                data: formData,
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        Swal.fire('Success', response.message, 'success');
-                        $('#editPage').modal('hide');
-                        location.reload();
-                    } else {
-                        Swal.fire('Error', response.message, 'error');
-                    }
-                },
-                error: function() {
-                    Swal.fire('Error', 'Something went wrong.', 'error');
-                }
-            });
-        });
-        $(document).on('click', '.toggle-status', function() {
-            var pageId = $(this).data('id');
-            var newStatus = $(this).data('status');
-            $.ajax({
-                url: '/pages/toggle_status',
-                method: 'POST',
-                data: {
-                    id: pageId,
-                    status: newStatus
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        Swal.fire('Success', response.message, 'success');
-                        location.reload();
-                    } else {
-                        Swal.fire('Error', response.message, 'error');
-                    }
-                },
-                error: function() {
-                    Swal.fire('Error', 'Something went wrong.', 'error');
-                }
-            });
         });
     </script>
 </body>

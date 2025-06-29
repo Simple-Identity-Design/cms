@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="swiper-slide overflow-hidden">
-                <div class="cover-background position-absolute top-0 start-0 w-100 h-100" data-swiper-parallax="500" style="background-image:url('https://via.placeholder.com/1920x1100');">
+                <div class="cover-background position-absolute top-0 start-0 w-100 h-100" data-swiper-parallax="500" style="background-image:url('https://placehold.co/1920x1100');">
                     <div class="opacity-light bg-gradient-sherpa-blue-black"></div>
                     <div class="container h-100" data-swiper-parallax="-500">
                         <div class="row align-items-center h-100">
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="swiper-slide overflow-hidden">
-                <div class="cover-background position-absolute top-0 start-0 w-100 h-100" data-swiper-parallax="500" style="background-image:url('https://via.placeholder.com/1920x1100');">
+                <div class="cover-background position-absolute top-0 start-0 w-100 h-100" data-swiper-parallax="500" style="background-image:url('https://placehold.co/1920x1100');">
                     <div class="opacity-light bg-gradient-sherpa-blue-black"></div>
                     <div class="container h-100" data-swiper-parallax="-500">
                         <div class="row align-items-center h-100">

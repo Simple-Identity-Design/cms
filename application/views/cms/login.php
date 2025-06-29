@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<?php $this->load->view('/global/cms/meta.php'); ?>
 	<title>Knowledge Base | CORK - Multipurpose Bootstrap Dashboard Template </title>
@@ -13,6 +14,7 @@
 	<link href="/assets/cms-assets/src/assets/css/dark/authentication/auth-cover.css" rel="stylesheet" type="text/css" />
 	<!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 </head>
+
 <body class=" layout-boxed">
 	<?php $this->load->view('/global/cms/loader.php'); ?>
 	<div class="auth-container d-flex">
@@ -42,7 +44,7 @@
 									<?php echo $this->session->flashdata('success_msg'); ?>
 								</div>
 							<?php endif; ?>
-							<form method="post" action="<?php echo base_url('login/login_user'); ?>">
+							<form method="post" action="/login/login_user">
 								<div class="row">
 									<div class="col-md-12 mb-3">
 										<h2>Sign In</h2>
@@ -90,4 +92,5 @@
 	</div>
 	<?php $this->load->view('/global/cms/scripts.php'); ?>
 </body>
+
 </html>
