@@ -73,16 +73,11 @@ class Pages_model extends CI_Model
             'user_id' => $user_id
         ]);
     }
-    public function insertTagsForPage($tags, $slug)
+    // Change $slug to $page_id
+    public function insertTagsForPage($tags, $page_id)
     {
-        $page = $this->getPageBySlug($slug);
-        if (!$page) {
-            return false;
-        }
-        $page_id = $page['id'];
         $tagsArray = array_filter(array_map('trim', explode(',', $tags)));
         foreach ($tagsArray as $tagName) {
-            // Insert tag into tags table if it doesn't exist
             $existingTag = $this->db->get_where('cmsSID_tags', ['name' => $tagName])->row_array();
             if (!$existingTag) {
                 $this->db->insert('cmsSID_tags', ['name' => $tagName]);
@@ -90,9 +85,8 @@ class Pages_model extends CI_Model
             } else {
                 $tag_id = $existingTag['id'];
             }
-            // Now associate tag with page
             $this->db->insert('cmsSID_page_tags', [
-                'page_id' => $page_id,
+                'page_id' => $page_id, // <--- USE THE ID
                 'tag_id' => $tag_id
             ]);
         }
@@ -113,11 +107,8 @@ class Pages_model extends CI_Model
         $this->db->where('p.id', $id);
         return $this->db->get()->row_array();
     }
-    public function updatePage($data)
+    public function updatePage($id, $data)
     {
-        if (!isset($data['id'])) return false;
-        $id = $data['id'];
-        unset($data['id']);
         $this->db->where('id', $id);
         return $this->db->update('cmsSID_pages', $data);
     }

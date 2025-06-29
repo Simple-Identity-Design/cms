@@ -8,10 +8,9 @@ class Dashboard extends MY_Controller
 	}
 	public function index()
 	{
-		$this->load->model('blog_model');
 		$data['blogs'] = $this->blog_model->getBlogs();
 		$data['allusers'] = $this->loadAllUsers();
-		$this->load->view('cms/dashboard', $data);
+		$this->load->view('/cms/dashboard', $data);
 	}
 	public function manage_inventory($deltaID = NULL)
 	{
@@ -55,7 +54,6 @@ class Dashboard extends MY_Controller
 	{
 		// Load validation + model
 		$this->load->library('form_validation');
-		$this->load->model('Blog_model');
 		// Validation rules
 		$this->form_validation->set_rules('add-blog-title',       'Title',       'required');
 		$this->form_validation->set_rules('add-blog-h1',          'H1',          'required');

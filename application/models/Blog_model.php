@@ -1,28 +1,49 @@
 <?php
 class Blog_model extends CI_model
 {
-    public function getBlogs()
+    // public function getBlogs($limit = null, $topic = null, $orderByLatest = false)
+    // {
+    //     if ($orderByLatest) {
+    //         $this->db->order_by('created_at', 'DESC');
+    //     }
+    //     if (!empty($topic)) {
+    //         $this->db->where('topic', $topic);
+    //     }
+    //     if (!empty($limit)) {
+    //         $this->db->limit((int) $limit);
+    //     }
+    //     $query = $this->db->get('blogs');
+    //     return $query->result_array();
+    // }
+    public function getBlogs($limit = null, $topic = null, $orderByLatest = false)
     {
-        $query = $this->db->get('blogs');
-        return $query->result_array();
-    }
-    public function getLatestBlogs()
-    {
-        $this->db->order_by('created_at', 'DESC');
-        $query = $this->db->get('blogs');
-        return $query->result_array();
-    }
-    public function getLatestBlogsLimited($limit = null, $topic = null)
-    {
-        $this->db->order_by('created_at', 'DESC');
-        if ($topic) {
-            $this->db->where('topic', $topic);
+        $this->db->select('
+        p.*, 
+        CONCAT(u.first_name, " ", u.last_name) AS user, 
+        CONCAT(LOWER(REPLACE(u.first_name, " ", "-")), "-", LOWER(REPLACE(u.last_name, " ", "-"))) AS author_slug,
+        c.name AS category_name, 
+        c.slug AS category_slug, 
+        c.id AS category_id
+    ');
+        $this->db->from('cmsSID_pages p');
+        $this->db->join('cmsSID_users u', 'u.user_id = p.user_id', 'left');
+        $this->db->join('cmsSID_categories c', 'c.id = p.category_id', 'left');
+        // Only published pages under blog/
+        $this->db->where('p.status', 'published');
+        $this->db->like('p.path', 'blog/', 'after');
+        // Filter by topic if given (assuming 'page_type' is used for topic)
+        if (!empty($topic)) {
+            $this->db->where('p.page_type', $topic);
         }
-        if ($limit) {
-            $this->db->limit($limit);
+        // Sort by newest if requested
+        if ($orderByLatest) {
+            $this->db->order_by('p.created_at', 'DESC');
         }
-        $query = $this->db->get('blogs');
-        return $query->result_array();
+        // Limit result count if provided
+        if (!empty($limit)) {
+            $this->db->limit((int) $limit);
+        }
+        return $this->db->get()->result_array();
     }
     public function getSingleBlog($slug)
     {

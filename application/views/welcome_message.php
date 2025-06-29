@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <?php $this->load->view('/global/cms/meta.php'); ?>
-    <title>Knowledge Base | CORK - Multipurpose Bootstrap Dashboard Template </title>
+    <title> | CORK - Multipurpose Bootstrap Dashboard Template </title>
     <?php $this->load->view('/global/cms/styles.php'); ?>
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     <link href="/assets/cms-assets/src/plugins/src/autocomplete/css/autoComplete.02.css" rel="stylesheet" type="text/css" />
@@ -12,6 +13,7 @@
     <link href="/assets/cms-assets/src/assets/css/dark/pages/knowledge_base.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 </head>
+
 <body class=" layout-boxed">
     <?php $this->load->view('/global/cms/loader.php'); ?>
     <?php $this->load->view('/global/cms/menu.php'); ?>
@@ -95,4 +97,5 @@
     <script src="/assets/cms-assets/src/assets/js/pages/knowledge-base.js"></script>
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 </body>
+
 </html>

@@ -5,7 +5,6 @@ class Services extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('blog_model');
     }
     public function _remap($method, $params = [])
     {
@@ -25,7 +24,7 @@ class Services extends CI_Controller
     }
     public function index()
     {
-        $data['latest_blogs'] = $this->blog_model->getLatestBlogsLimited(3);
+        $data['latest_blogs'] = $this->blog_model->getBlogsLimited(3);
         $this->load->view('services', $data);
     }
 }
